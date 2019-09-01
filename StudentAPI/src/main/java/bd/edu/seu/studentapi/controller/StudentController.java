@@ -66,4 +66,9 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/status")
+    public String status() {
+        return "Working!";
+    }
+
 }
