@@ -3,7 +3,6 @@ package bd.edu.seu.programapi.service;
 import bd.edu.seu.programapi.exception.ResourceAlreadyExistsException;
 import bd.edu.seu.programapi.exception.ResourceDoesNotExistException;
 import bd.edu.seu.programapi.model.Program;
-import bd.edu.seu.programapi.model.ProgramName;
 import bd.edu.seu.programapi.repository.ProgramRepository;
 import org.springframework.stereotype.Service;
 

@@ -28,10 +28,23 @@ public class StudentServiceTest {
 
     @Test
     public void insertStudent() throws bd.edu.seu.studentapi.exception.ResourceAlreadyExistsException {
-        Student student = new Student("125", "AR", LocalDate.of(1991, 10, 12), "BScInCSE", 3.5, 100, "null");
+        Student student = new Student("125", "AR", "atikur1998@yahoo.com",LocalDate.of(1991, 10, 12), 44, LocalDate.of(2016,07,10),"BScInCSE", 3.5, 100, "null");
         Student insertStudent = studentService.insertStudent(student);
         assertEquals(student, insertStudent);
     }
+
+    /*
+    private String id;
+    private String name;
+    private String email;
+    private LocalDate dob;
+    private long batch;
+    private LocalDate dateOfAdmission;
+    private String Program;
+    private Double cgpa;
+    private long completedCredit;
+    private String transactionId;
+    */
 
     @Test
     public void findAll() {
@@ -46,7 +59,7 @@ public class StudentServiceTest {
 
     @Test
     public void updateStudent() {
-        Student student = new Student("125", "AR", LocalDate.of(1991, 10, 12), "BScInCSE", 3.5, 100, "null");
+        Student student = new Student("125", "AR", "atikur1998@yahoo.com",LocalDate.of(1991, 10, 12), 44, LocalDate.of(2016,07,10),"BScInCSE", 3.5, 100, "null");
         try {
             Student insertStudent = studentService.insertStudent(student);
             assertEquals(student, insertStudent);
@@ -60,7 +73,7 @@ public class StudentServiceTest {
 
     @Test
     public void deleteById() throws bd.edu.seu.studentapi.exception.ResourceDoesNotExistException, bd.edu.seu.studentapi.exception.ResourceAlreadyExistsException {
-        Student student = new Student("125", "AR", LocalDate.of(1991, 10, 12), "BScInCSE", 3.5, 100, "null");
+        Student student = new Student("125", "AR", "atikur1998@yahoo.com",LocalDate.of(1991, 10, 12), 44, LocalDate.of(2016,07,10),"BScInCSE", 3.5, 100, "null");
         Student insertStudent = studentService.insertStudent(student);
         boolean delete = studentService.deleteById(student.getId());
         assertTrue(delete);

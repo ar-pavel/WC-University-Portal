@@ -3,9 +3,7 @@ package bd.edu.seu.programapi.service;
 import bd.edu.seu.programapi.exception.ResourceAlreadyExistsException;
 import bd.edu.seu.programapi.exception.ResourceDoesNotExistException;
 import bd.edu.seu.programapi.model.Course;
-import bd.edu.seu.programapi.model.ProgramName;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -25,15 +24,28 @@ public class CourseServiceTest {
 //        this.courseService = courseService;
 //    }
 
+    /*
+    private String code;
+    private String title;
+    private Double credit;
+     */
 
-    @Before
-    public void setUp() throws Exception {
+
+    //    @Before
+//    public void setUp() throws Exception {
+//        courseService.deleteALL();
+//    }
+    @Test
+    public void deleteALL() {
         courseService.deleteALL();
+        List<Course> all = courseService.findAll();
+        assertEquals(all.size(), 0);
     }
 
     @Test
     public void insertCourse() throws ResourceAlreadyExistsException {
         Course course = new Course("CSE1011","Computer Fundamental",3.0);
+//        Course course = new Course("CSE1012","Computer Fundamental Lab",1.0);
         Course insertCourse = courseService.insertCourse(course);
         assertEquals(course,insertCourse);
     }
@@ -48,14 +60,14 @@ public class CourseServiceTest {
     @Test
     public void findById() throws ResourceAlreadyExistsException, ResourceDoesNotExistException {
         Course course = new Course("CSE1011","Computer Fundamental", 3.0);
-        Course insertCourse = courseService.insertCourse(course);
+//        Course insertCourse = courseService.insertCourse(course);
         Course byId = courseService.findById(course.getCode());
         assertEquals(course,byId);
     }
 
     @Test
     public void updateCourse() throws ResourceDoesNotExistException, ResourceAlreadyExistsException {
-        Course course = new Course("CSE1011","Computer Fundamental", 3.0);
+        Course course = new Course("16","Computer Fundamental", 3.0);
         courseService.insertCourse(course);
         Course updatedcourse = new Course("CSE1011","Computer Fundamental Lab", 3.0);
         Course updateCourse = courseService.updateCourse(course.getCode(), updatedcourse);
@@ -65,7 +77,7 @@ public class CourseServiceTest {
 
     @Test
     public void deleteById() {
-        Course course = new Course("CSE1011","Computer Fundamental", 3.0);
+        Course course = new Course("CSE1014","Computer Fundamental", 3.0);
         boolean state = false;
         try {
             Course insertCourse = courseService.insertCourse(course);
@@ -78,10 +90,5 @@ public class CourseServiceTest {
 
     }
 
-    @Test
-    public void deleteALL() {
-        courseService.deleteALL();
-        List<Course> all = courseService.findAll();
-        assertEquals(all.size(), 0);
-    }
+
 }

@@ -4,22 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"name"})
-@Entity
 public class Program {
     @Id
     private String name;
     private long minCreditReq;
-    private long minCgpaReq;
-    @OneToMany
+    private double minCgpaReq;
     private List<Course> courseList;
 }
