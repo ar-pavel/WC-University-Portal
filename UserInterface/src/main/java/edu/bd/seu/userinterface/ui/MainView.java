@@ -10,7 +10,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-@Route("")
+@Route("main")
 public class MainView extends AppLayout {
     public MainView() {
         Header head = new Header();
@@ -18,7 +18,8 @@ public class MainView extends AppLayout {
         img.setHeight("55px");
 //        addToNavbar(head);
         addToNavbar(new DrawerToggle(), head);
-        Tabs tabs = new Tabs(new Tab("Home"), new Tab("About"));
+        Tabs tabs = new Tabs(new Tab("Dashboard"), new Tab("Profile"), new Tab("Convocation info"));
+
         
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         addToDrawer(tabs);
