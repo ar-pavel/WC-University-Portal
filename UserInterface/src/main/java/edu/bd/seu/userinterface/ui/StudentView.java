@@ -4,14 +4,13 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -21,81 +20,108 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
+import edu.bd.seu.userinterface.model.Course;
 import edu.bd.seu.userinterface.model.Student;
 import edu.bd.seu.userinterface.model.StudentGuest;
+import edu.bd.seu.userinterface.service.StudentService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.vaadin.flow.component.icon.VaadinIcon.DASHBOARD;
 
 @Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
 @Route("student")
-public class StudentView  extends VerticalLayout {
+public class StudentView  extends AppLayout {
+
     private Grid<StudentGuest> studentGrid;
+    private Grid<Course> courseGrid;
+
+    private Student student;
+    private StudentService studentService;
+
+    private Map<Tab, Component> tab2Workspace;
+    private Tabs tabs;
+
     public StudentView() {
+
+        studentMaker();
+
         studentGrid = new Grid<>();
-
-        Tab dashboard = new Tab(new HorizontalLayout(VaadinIcon.DASHBOARD.create(), new Label("Dashboard")));
-        Tab profile = new Tab(new HorizontalLayout(VaadinIcon.USER.create(), new Label("Profile")));
-        Tab convocation = new Tab(new HorizontalLayout(VaadinIcon.ACADEMY_CAP.create(), new Label("Convocation")));
-        Button logout = new Button("LogOut",VaadinIcon.SIGN_OUT.create());
-        Tab logOut = new Tab(logout);
-
-        VerticalLayout dashboardPage = new VerticalLayout();
-        VerticalLayout profilePage = new VerticalLayout();
-        VerticalLayout convocationPage = convocationForm();
-
-        profilePage.getStyle().set("margin-left", "270px");
-        convocationPage.getStyle().set("margin-left", "270px");
-        dashboardPage.getStyle().set("margin-left", "270px");
-        Image image = new Image("https://pmcvariety.files.wordpress.com/2019/04/joker-trailer.jpg?w=1000","joker");
-        profilePage.add(image);
-
-        Map<Tab, Component> tabsToPages = new HashMap<>();
-        tabsToPages.put(dashboard, dashboardPage);
-        tabsToPages.put(profile, profilePage);
-        tabsToPages.put(convocation, convocationPage);
-
-        Tabs tabs = new Tabs();
-        tabs.add(dashboard,profile,convocation,logOut);
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-
-        Div pages = new Div(dashboardPage, profilePage, convocationPage);
-        logout.addClickListener(buttonClickEvent -> logout.getUI().ifPresent(ui -> ui.navigate("")));
-
-        Set<Component> pagesShown = Stream.of(dashboardPage)
-                .collect(Collectors.toSet());
-
-        tabs.addSelectedChangeListener(event -> {
-            pagesShown.forEach(page -> page.setVisible(false));
-            pagesShown.clear();
-            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
-            selectedPage.setVisible(true);
-            pagesShown.add(selectedPage);
-        });
+        tab2Workspace = new HashMap<>();
+        courseGrid = new Grid<>();
 
         Header header = new Header();
-        AppLayout mainLayout = new AppLayout();
-        mainLayout.addToNavbar(new DrawerToggle());
-
+//        header.getElement().getAttribute()
         Footer footer = new Footer();
-        mainLayout.addToDrawer(header,tabs,footer);
-        dashboardPage.setVisible(true);
-        profilePage.setVisible(false);
-        convocationPage.setVisible(false);
+        addToNavbar(new DrawerToggle());
 
-        add(mainLayout,dashboardPage,profilePage,convocationPage);
-        getStyle().set("display", "block");
+//        Student serviceStudent = studentService.getStudent("2016100000003");
+//        System.err.println(serviceStudent);
 
+        tabs = new Tabs(dashBoard(), user(), convocation(),logout());
+        tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        tabs.addSelectedChangeListener(event -> {
+            final Tab selectedTab = event.getSelectedTab();
+            final Component component = tab2Workspace.get(selectedTab);
+            setContent(component);
+        });
+        addToDrawer(header,tabs,footer);
     }
 
-    private VerticalLayout convocationForm(){
-        VerticalLayout convocation = new VerticalLayout();
+    private Tab dashBoard() {
+        Span label = new Span("Dashboard");
+        Icon icon  = DASHBOARD.create();
+        Tab  tab   = new Tab(new HorizontalLayout(icon,label));
+        tab2Workspace.put(tab, deshboardView());
+        return tab;
+    }
+
+    private VerticalLayout deshboardView() {
+        VerticalLayout dashbaLayout = new VerticalLayout();
+        H1 h1 = new H1("This is the Dashboard & IDK what to do with it! -_- ");
+        dashbaLayout.add(h1);
+        return dashbaLayout;
+    }
+
+    private Tab user() {
+        Span label = new Span("Proile");
+        Icon icon  = VaadinIcon.USER.create();
+        Tab  tab   = new Tab(new HorizontalLayout(icon,label));
+        tab2Workspace.put(tab, getProfileView());
+        return tab;
+    }
+
+    private VerticalLayout getProfileView(){
+        VerticalLayout profilePage = new VerticalLayout();
+        Label name = new Label("Name : " + student.getName());
+        Label id = new Label("Student ID : " + student.getId());
+        Label dob = new Label("Date Of Birth : " + student.getDob().toString());
+        Label creditCom = new Label("Credit Completed : " + student.getCompletedCredit());
+        Label cgpa = new Label("CGPA : " + student.getCgpa());
+
+        FormLayout layout = new FormLayout();
+        layout.add(name,id,dob,cgpa,creditCom);
+        setCourseGrid();
+        profilePage.add(layout,courseGrid);
+        return profilePage;
+    }
+
+    private Tab convocation() {
+        Span label = new Span("Convocation");
+        Icon icon  = DASHBOARD.create();
+        Tab  tab   = new Tab(new HorizontalLayout(icon,label));
+        tab2Workspace.put(tab, convocationdView());
+        return tab;
+    }
+
+    private VerticalLayout convocationdView() {
+        VerticalLayout convocationLayout = new VerticalLayout();
 
         Dialog addMem = addMember();
         Dialog makePaym = makePayment();
@@ -108,9 +134,20 @@ public class StudentView  extends VerticalLayout {
         addMember.getStyle().set("float", "right");
 
         setStudentGrid();
-        convocation.add(ConfirmPayment,addMember,studentGrid);
+        convocationLayout.add(ConfirmPayment,addMember,studentGrid);
 
-        return convocation;
+        return convocationLayout;
+    }
+
+    private Tab logout() {
+        Span label = new Span("LogOut");
+        Icon icon  = DASHBOARD.create();
+        Button logout = new Button("LogOut",VaadinIcon.SIGN_OUT.create());
+        logout.addClickListener(buttonClickEvent -> logout.getUI().ifPresent(ui -> ui.navigate("")));
+        Tab tab = new Tab(logout);
+
+        tab2Workspace.put(tab, new VerticalLayout());
+        return tab;
     }
 
     private Dialog makePayment(){
@@ -152,8 +189,6 @@ public class StudentView  extends VerticalLayout {
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
 
-        Label messageLabel = new Label();
-
         Button confirmButton = new Button("Confirm", event -> {
             Notification.show("Confirmed!");
             dialog.close();
@@ -169,11 +204,10 @@ public class StudentView  extends VerticalLayout {
         return dialog;
     }
 
-
     private void setStudentGrid(){
         studentGrid
                 .addColumn(StudentGuest::getName)
-                .setWidth("150px")
+                .setWidth("300px")
                 .setFlexGrow(0)
                 .setHeader("Guest Name");
         studentGrid
@@ -185,6 +219,40 @@ public class StudentView  extends VerticalLayout {
                 .addColumn(StudentGuest::getRelation)
                 .setFlexGrow(1)
                 .setHeader("Relationship");
+
+    }
+
+    private void setCourseGrid(){
+        courseGrid.setRowsDraggable(true);
+        courseGrid
+                .addColumn(Course::getCode)
+                .setFlexGrow(1)
+                .setHeader("Course Code");
+        courseGrid
+                .addColumn(Course::getTitle)
+                .setFlexGrow(1)
+                .setHeader("Course Title");
+        courseGrid
+                .addColumn(Course::getCredit)
+                .setFlexGrow(1)
+                .setHeader("Credit");
+
+        courseGrid.setItems(student.getCourseList());
+        System.err.println(student.getCourseList());
+    }
+
+    private void studentMaker(){
+        List<Course> courses = new ArrayList<>();
+        courses.add(new Course("CSE1011","Programming Language I (C)",3.0));
+        courses.add(new Course("CSE1012","Programming Language I (C) lab",1.0));
+        courses.add(new Course("CSE1013","Computer Fundamentals",3.0));
+        courses.add(new Course("CSE1021","Discrete Mathematics",3.0));
+        courses.add(new Course("CSE1033","Data Structure",3.0));
+        courses.add(new Course("CSE1034","Data Structure Lab",1.0));
+        courses.add(new Course("CSE2013","Digital Logic Design",3.0));
+        courses.add(new Course("CSE2014","Digital Logic Design Lab",1.0));
+
+        student = new Student("2016100000003", "Tanvir Ahmed", "2016100000003.seu.edu.bd", LocalDate.of(1996, 10, 12), 43, LocalDate.of(2016,04,10),"BScInCSE", 3.94, 112, courses);
 
     }
 

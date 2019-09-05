@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,5 +25,5 @@ public class Student {
     private String Program;
     private Double cgpa;
     private long completedCredit;
-    private String transactionId;
+    private List<Course> courseList;
 }

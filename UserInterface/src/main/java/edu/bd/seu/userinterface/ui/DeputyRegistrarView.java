@@ -4,85 +4,93 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.Route;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.vaadin.flow.component.icon.VaadinIcon.DASHBOARD;
 
 
 @Route("deputy-registrar")
-public class DeputyRegistrarView extends VerticalLayout {
+public class DeputyRegistrarView extends AppLayout {
+    private Map<Tab, Component> tab2Workspace;
+    private Tabs tabs;
+
     public DeputyRegistrarView() {
-        Tab dashboard = new Tab(new HorizontalLayout(VaadinIcon.DASHBOARD.create(), new Label("Dashboard")));
-        Tab profile = new Tab(new HorizontalLayout(VaadinIcon.USER.create(), new Label("Profile")));
-        Tab modify = new Tab(new HorizontalLayout(VaadinIcon.SCREWDRIVER.create(), new Label("Change System")));
-        Button logout = new Button("LogOut",VaadinIcon.SIGN_OUT.create());
-        Tab logOut = new Tab(logout);
-
-        VerticalLayout dashboardPage = new VerticalLayout();
-        VerticalLayout profilePage = new VerticalLayout();
-        VerticalLayout modifyPage = new VerticalLayout();
-
-        profilePage.getStyle().set("margin-left", "270px");
-        modifyPage.getStyle().set("margin-left", "270px");
-        dashboardPage.getStyle().set("margin-left", "270px");
-        Image image = new Image("https://pmcvariety.files.wordpress.com/2019/04/joker-trailer.jpg?w=1000","joker");
-        profilePage.add(image);
-
-        Map<Tab, Component> tabsToPages = new HashMap<>();
-        tabsToPages.put(dashboard, dashboardPage);
-        tabsToPages.put(profile, profilePage);
-        tabsToPages.put(modify, modifyPage);
-
-        Tabs tabs = new Tabs();
-        tabs.add(dashboard,profile,modify,logOut);
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-
-        Div pages = new Div(dashboardPage, profilePage, modifyPage);
-        logout.addClickListener(buttonClickEvent -> logout.getUI().ifPresent(ui -> ui.navigate("")));
-
-        Set<Component> pagesShown = Stream.of(dashboardPage)
-                .collect(Collectors.toSet());
-
-        tabs.addSelectedChangeListener(event -> {
-            pagesShown.forEach(page -> page.setVisible(false));
-            pagesShown.clear();
-            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
-            selectedPage.setVisible(true);
-            pagesShown.add(selectedPage);
-        });
-
         Header header = new Header();
-        AppLayout mainLayout = new AppLayout();
-        mainLayout.addToNavbar(new DrawerToggle());
-
         Footer footer = new Footer();
-        mainLayout.addToDrawer(header,tabs,footer);
-        dashboardPage.setVisible(true);
-        profilePage.setVisible(false);
-        modifyPage.setVisible(false);
+        addToNavbar(new DrawerToggle());
+        tab2Workspace = new HashMap<>();
 
-        add(mainLayout,dashboardPage,profilePage,modifyPage);
-        getStyle().set("display", "block");
+        tabs = new Tabs(dashBoard(), user(), convocation(),logout());
+        tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        tabs.addSelectedChangeListener(event -> {
+            final Tab selectedTab = event.getSelectedTab();
+            final Component component = tab2Workspace.get(selectedTab);
+            setContent(component);
+        });
+        addToDrawer(header,tabs,footer);
+    }
+    private Tab dashBoard() {
+        Span label = new Span("Dashboard");
+        Icon icon  = DASHBOARD.create();
+        Tab  tab   = new Tab(new HorizontalLayout(icon,label));
+        tab2Workspace.put(tab, deshboardView());
+        return tab;
     }
 
-    private VerticalLayout systemChange(){
-        VerticalLayout mainLayout = new VerticalLayout();
+    private VerticalLayout deshboardView() {
+        VerticalLayout dashbaLayout = new VerticalLayout();
+        H1 h1 = new H1("This is the Dashboard");
+        dashbaLayout.add(h1);
+        return dashbaLayout;
+    }
 
+    private Tab user() {
+        Span label = new Span("Proile");
+        Icon icon  = VaadinIcon.USER.create();
+        Tab  tab   = new Tab(new HorizontalLayout(icon,label));
+        tab2Workspace.put(tab, getProfileView());
+        return tab;
+    }
+    private VerticalLayout getProfileView(){
+        VerticalLayout profilePage = new VerticalLayout();
+        Image image = new Image("https://pmcvariety.files.wordpress.com/2019/04/joker-trailer.jpg?w=1000","joker");
+        profilePage.add(image);
+        return profilePage;
+    }
 
+    private Tab convocation() {
+        Span label = new Span("Convocation");
+        Icon icon  = DASHBOARD.create();
+        Tab  tab   = new Tab(new HorizontalLayout(icon,label));
+        tab2Workspace.put(tab, convocationdView());
+        return tab;
+    }
 
-        return mainLayout;
+    private VerticalLayout convocationdView() {
+        VerticalLayout convocationdLayout= new VerticalLayout();
+
+        return convocationdLayout;
+    }
+    private Tab logout() {
+        Span label = new Span("LogOut");
+        Icon icon  = DASHBOARD.create();
+        Button logout = new Button("LogOut",VaadinIcon.SIGN_OUT.create());
+        logout.addClickListener(buttonClickEvent -> logout.getUI().ifPresent(ui -> ui.navigate("")));
+        Tab tab = new Tab(logout);
+
+        tab2Workspace.put(tab, new VerticalLayout());
+        return tab;
     }
 }

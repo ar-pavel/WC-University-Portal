@@ -11,7 +11,7 @@ public class LgoinView extends LoginOverlay {
         Image logo = new Image("https://i.paste.pics/6LL9D.png", "Logo");
         logo.setHeight("90px");
         setTitle(logo);
-        setDescription("www.wcu.edu.bd");
+        setDescription("This is a dummy University Portal of an imaginary university named 'WC University'");
 
         addLoginListener(loginEvent -> getUI().ifPresent(ui -> ui.navigate("home")));
 //        setForgotPasswordButtonVisible(false);

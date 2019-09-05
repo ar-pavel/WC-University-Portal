@@ -33,6 +33,9 @@ public class CoordinatorView extends VerticalLayout {
 
     private Grid<Course> courseGrid;
     private Grid<Student> studentGrid;
+
+
+
     public CoordinatorView(StudentService studentService) {
         this.studentService = studentService;
 
