@@ -1,39 +1,35 @@
 package edu.bd.seu.userinterface.ui;
 
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
-public class Header extends HorizontalLayout {
+public class Header extends VerticalLayout {
 
     public Header( ) {
         super();
-        Image wcuLogo = new Image("https://www.wcupa.edu/_services/STU/ramsEyeView/images/wcuSeal.png", "WCU Logo");
-        wcuLogo.setHeight("60px");
-        Button home = new Button(wcuLogo);
 
-        Span userInfo = new Span();
+        Div leftLogo = new Div();
+        Image wcuLogo = new Image("https://www.wcupa.edu/_services/STU/ramsEyeView/images/wcuSeal.png", "WCU Logo");
+        wcuLogo.setHeight("56px");
+        wcuLogo.getStyle().set("margin-top", "10px");
+        leftLogo.add(wcuLogo);
+
+//        Div userInfo = new Div();
         Label userName = new Label("UserName");
         Label userRole = new Label("UserRole");
-//        VerticalLayout layout = new VerticalLayout();
-//        layout.add(userName,userRole);
-        userInfo.add(userRole,userName);
+        userName.getStyle().set("margin-top", "0px");
+        userRole.getStyle().set("margin-top", "0px");
+//        userInfo.add(userName,userRole);
 
-//        userInfo.getStyle().set("display", "inline-block");
-//        userInfo.getStyle().set("margin-top", "0px");
-        userInfo.getStyle().set("position", "relative");
-        userInfo.getStyle().set("top", "0px");
+//        rightInfoBar.getStyle().set("float", "right");
+//        leftLogo.getStyle().set("float", "left");
 
-        add(home,userInfo);
+        add(leftLogo,userName, userRole);
+//        getStyle().set("display", "block");
+//        setAlignSelf(Alignment.CENTER, rightInfoBar);
     }
 
 }
