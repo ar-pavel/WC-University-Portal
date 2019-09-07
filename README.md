@@ -63,7 +63,7 @@
 
    [wcu-portal.herokuapp.com](https://wcu-portal.herokuapp.com) 
 
-`` Please click all on all of the micro services link before getting to the fornt end.  ``
+`` Please click in all of the micro services link before getting to the fornt end.  ``
 
 ##### Microservices links:
 
