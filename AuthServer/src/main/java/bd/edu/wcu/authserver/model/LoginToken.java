@@ -14,6 +14,5 @@ public class LoginToken {
     @Id
     private String username;
     private String name;
-    private String fullName;
     private String role;
 }

@@ -32,7 +32,6 @@ public class AuthController {
             System.err.println("Controller " + credential);
 
             LoginToken loginToken = credential.getLoginToken();
-            loginToken.setFullName(credential.getName());
             String password = credential.getPassword();
 
             LoginToken authServiceUser = authService.createUser(loginToken, password);

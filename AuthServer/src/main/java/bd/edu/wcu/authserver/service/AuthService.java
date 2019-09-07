@@ -25,14 +25,13 @@ public class AuthService {
         Optional<User> user = authRepository.findById(username);
 
         if (!user.isPresent()  )
-            return new LoginToken(null, null, null, "norole");
-        else if(user.isPresent()){
-            if(!user.get().getPassword().equals(password))
-                return new LoginToken(null, null, null, "norole");
-        }
+            return new LoginToken(null, null,  "norole");
+        else if(user.isPresent() && !user.get().getPassword().equals(password))
+            return new LoginToken(null, null,  "norole");
+
 
         Optional<LoginToken> loginToken = loginTokenRepository.findById(username);
-        return loginToken.orElseGet(() -> new LoginToken(null, null, null, "norole"));
+        return loginToken.orElseGet(() -> new LoginToken(null,  null, "norole"));
     }
 
     public LoginToken createUser(LoginToken loginToken, String password) throws ResourceAlreadyExistsException {

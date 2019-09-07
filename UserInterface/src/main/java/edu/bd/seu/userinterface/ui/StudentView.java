@@ -24,10 +24,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
-import edu.bd.seu.userinterface.model.Convocation;
-import edu.bd.seu.userinterface.model.Course;
-import edu.bd.seu.userinterface.model.Student;
-import edu.bd.seu.userinterface.model.StudentGuest;
+import edu.bd.seu.userinterface.model.*;
 import edu.bd.seu.userinterface.service.ConvocationService;
 import edu.bd.seu.userinterface.service.StudentService;
 
@@ -56,8 +53,9 @@ public class StudentView  extends AppLayout {
     private Map<Tab, Component> tab2Workspace;
     private Tabs tabs;
 
-    public StudentView(HttpSession httpSession, ConvocationService convocationService) {
+    public StudentView(HttpSession httpSession, StudentService studentService, ConvocationService convocationService) {
         this.convocationService = convocationService;
+        this.studentService = studentService;
         studentMaker();
         studentGrid = new Grid<>();
         tab2Workspace = new HashMap<>();
@@ -66,12 +64,14 @@ public class StudentView  extends AppLayout {
 
 
         Header header = new Header(httpSession);
-//        header.getElement().getAttribute()
+        LoginToken loginToken = header.getLoginToken();
+        System.err.println(loginToken);
+
         Footer footer = new Footer();
         addToNavbar(new DrawerToggle());
 
-        studentMaker();
-//        student = studentService.getStudent(header.getLoginToken().getUsername());
+//        studentMaker();
+        student = studentService.getStudent(loginToken.getUsername());
 //         convocation = convocationService.getConvocation(student.getId());
         convocation = new Convocation();
 //        Student serviceStudent = studentService.getStudent("2016100000003");
@@ -80,8 +80,8 @@ public class StudentView  extends AppLayout {
         tabs = new Tabs(dashBoard(), user(), convocation(),logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addSelectedChangeListener(event -> {
-            final Tab selectedTab = event.getSelectedTab();
-            final Component component = tab2Workspace.get(selectedTab);
+            Tab selectedTab = event.getSelectedTab();
+            Component component = tab2Workspace.get(selectedTab);
             setContent(component);
         });
         addToDrawer(header,tabs,footer);
@@ -99,7 +99,7 @@ public class StudentView  extends AppLayout {
 
     private VerticalLayout deshboardView() {
         VerticalLayout dashbaLayout = new VerticalLayout();
-        H1 h1 = new H1("This is the Dashboard & IDK what to do with it! -_- ");
+        H1 h1 = new H1("Welcome To WC University Student Portal");
         dashbaLayout.add(h1);
         return dashbaLayout;
     }
