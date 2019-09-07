@@ -4,29 +4,29 @@
 
 ### Mudules:
   1.    Student View
-   - 1.1 View Registered courses by him/her
-    1.2 View current CGPA, number of credits completed
-    1.3 Apply for convocation if eligible (depends on his/her program’s minimum credits for graduation criteria). Otherwise the option will be disabled
-    1.4 Make payment for convocation (Selecting gateway and placing TrxID). This option will be disabled before applying. Also one can make payment only once.
+   - View Registered courses by him/her
+   -  View current CGPA, number of credits completed
+   -  Apply for convocation if eligible (depends on his/her program’s minimum credits for graduation criteria). Otherwise the option will be disabled
+    - Make payment for convocation (Selecting gateway and placing TrxID). This option will be disabled before applying. Also one can make payment only once.
 
   2.    Coordinator View
-    2.1 View students registered in program he is coordinating
-    2.2 View their grades and credits completed
-    2.3 Select students and register them into different courses offered in that particular program.
+    - View students registered in program he is coordinating
+    - View their grades and credits completed
+    - Select students and register them into different courses offered in that particular program.
   
   3.    Admission Officer View
-    3.1 View students registered in all the programs
-    3.2 Add students in different programs. Only into one of the programs created in the system, a student can be admitted. 
-    3.3 Create initial login credentials for the students
+    - View students registered in all the programs
+    - Add students in different programs. Only into one of the programs created in the system, a student can be admitted. 
+    - Create initial login credentials for the students
   
   4.    Deputy Registrar(Academic) VIew
-    4.1 View all the programs and courses offered in the university
-    4.2 Create program
-    4.3 Create courses. Course needs to be offered in any one of the created program. A program combo box makes it sure.
+    - View all the programs and courses offered in the university
+    - Create program
+    - Create courses. Course needs to be offered in any one of the created program. A program combo box makes it sure.
     
   5.    Deputy Registrar(Human Resource) VIew
-    5.1 View all the employees in all the departments
-    5.2 Add employee into any department and create initial credentials.
+    - View all the employees in all the departments
+    - Add employee into any department and create initial credentials.
 
 
 
