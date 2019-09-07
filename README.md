@@ -1,8 +1,13 @@
 # WC University Management System
 
-  WC University is an Imginary University and this project is to maintain this university.
+
+  WC University is an Imginary University and this project is to maintain this university as a course projcet of `Advance Java`. 
+  
+   
+  
 
 ### Mudules:
+
 #####  1.    Student View
    - View Registered courses by him/her
    - View current CGPA, number of credits completed
@@ -50,11 +55,13 @@
           
 
 
-FrontEnd Link:       [wcu-portal.herokuapp.com](https://wcu-portal.herokuapp.com) 
+##### FrontEnd Link:       
+
+   [wcu-portal.herokuapp.com](https://wcu-portal.herokuapp.com) 
 
 `` Please click all on all of the micro services link before getting to the fornt end.  ``
 
-Microservices links:
+##### Microservices links:
 
   - [wcu-discovery-server.herokuapp.com](http://wcu-discovery-server.herokuapp.com)
   - [wcu-gateway-api.herokuapp.com](https://wcu-gateway-api.herokuapp.com)
