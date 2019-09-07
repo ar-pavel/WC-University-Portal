@@ -28,7 +28,9 @@ import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
+import edu.bd.seu.userinterface.model.LoginToken;
 import edu.bd.seu.userinterface.model.Student;
+import edu.bd.seu.userinterface.service.AuthService;
 import edu.bd.seu.userinterface.service.ProgramService;
 import edu.bd.seu.userinterface.service.StudentService;
 import org.springframework.web.client.HttpClientErrorException;
@@ -50,14 +52,17 @@ public class AdmissionOfficerView extends AppLayout {
     private Grid<Student> studentGrid;
     private Dialog dialog;
 
+    private AuthService authService;
+
     private StudentService studentService;
     private List<Student> students;
     private Binder<Student> studentBinder;
     private ProgramService programService;
 
-    public AdmissionOfficerView(HttpSession httpSession, StudentService studentService, ProgramService programService) {
+    public AdmissionOfficerView(HttpSession httpSession, AuthService authService, StudentService studentService, ProgramService programService) {
         this.programService = programService;
         this.studentService = studentService;
+        this.authService = authService;
         init();
         Header header = new Header(httpSession);
         Footer footer = new Footer();
@@ -189,7 +194,16 @@ public class AdmissionOfficerView extends AppLayout {
                 Notification.show(student.toString());
                 Student savedStudent = studentService.insertStudent(student);
                 studentGrid.setItems(studentService.getStudents());
-                Notification.show("Saved " + savedStudent.getName());
+                LoginToken loginToken = new LoginToken();
+                loginToken.setName(savedStudent.getName());
+                loginToken.setRole("Student");
+                loginToken.setUsername(savedStudent.getId());
+
+                String password = loginToken.getUsername() + "WCU";
+                String name = savedStudent.getName();
+
+                LoginToken authServiceCredential = authService.createCredential(loginToken,name, password);
+                Notification.show("Deafult Pasword is student id + WCU");
                 dialog.close();
             }catch (HttpClientErrorException.Conflict errorException) {
                 studentService.updateStudent(student);

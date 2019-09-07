@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -16,15 +17,18 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
+import edu.bd.seu.userinterface.model.Convocation;
 import edu.bd.seu.userinterface.model.Course;
 import edu.bd.seu.userinterface.model.Student;
 import edu.bd.seu.userinterface.model.StudentGuest;
+import edu.bd.seu.userinterface.service.ConvocationService;
 import edu.bd.seu.userinterface.service.StudentService;
 
 import javax.servlet.http.HttpSession;
@@ -40,8 +44,11 @@ import static com.vaadin.flow.component.icon.VaadinIcon.DASHBOARD;
 @Route("student")
 public class StudentView  extends AppLayout {
 
+    private Convocation convocation;
+
     private Grid<StudentGuest> studentGrid;
     private Grid<Course> courseGrid;
+    private ConvocationService convocationService;
 
     private Student student;
     private StudentService studentService;
@@ -49,19 +56,24 @@ public class StudentView  extends AppLayout {
     private Map<Tab, Component> tab2Workspace;
     private Tabs tabs;
 
-    public StudentView(HttpSession httpSession) {
-
+    public StudentView(HttpSession httpSession, ConvocationService convocationService) {
+        this.convocationService = convocationService;
         studentMaker();
-
         studentGrid = new Grid<>();
         tab2Workspace = new HashMap<>();
         courseGrid = new Grid<>();
+        convocation = new Convocation();
+
 
         Header header = new Header(httpSession);
 //        header.getElement().getAttribute()
         Footer footer = new Footer();
         addToNavbar(new DrawerToggle());
 
+        studentMaker();
+//        student = studentService.getStudent(header.getLoginToken().getUsername());
+//         convocation = convocationService.getConvocation(student.getId());
+        convocation = new Convocation();
 //        Student serviceStudent = studentService.getStudent("2016100000003");
 //        System.err.println(serviceStudent);
 
@@ -126,18 +138,67 @@ public class StudentView  extends AppLayout {
     private VerticalLayout convocationdView() {
         VerticalLayout convocationLayout = new VerticalLayout();
 
-        Dialog addMem = addMember();
-        Dialog makePaym = makePayment();
+        HorizontalLayout up = new HorizontalLayout();
+        up.setWidthFull();
+        HorizontalLayout down = new HorizontalLayout();
+        down.setWidthFull();
+
+        Label as = new Label("Application Status ");
+        TextField applicationStatus = new TextField(null,"Not applied");
+        applicationStatus.setEnabled(false);
+
+        Label ps = new Label("Payment Status ");
+        TextField paymentStatus = new TextField(null,"Not paid");
+        paymentStatus.setEnabled(false);
+
+        Dialog makePay = makePayment();
 
         Button ConfirmPayment = new Button("Confirm Payment", VaadinIcon.MONEY_DEPOSIT.create());
-        ConfirmPayment.addClickListener(buttonClickEvent -> makePaym.open());
+        ConfirmPayment.addClickListener(buttonClickEvent -> makePay.open());
+        if(convocation.getStudentId() != null) {
+            applicationStatus.setEnabled(false);
+            applicationStatus.setValue("Application is on pending");
+        }
 
-        Button addMember = new Button("Add Member", VaadinIcon.USERS.create());
-        addMember.addClickListener(buttonClickEvent -> addMem.open());
-        addMember.getStyle().set("float", "right");
+        if(convocation.getPaymentStatus()!= null) {
+            ConfirmPayment.setEnabled(false);
+            paymentStatus.setValue("Paid");
+            applicationStatus.setValue("Application Confirmed");
 
-        setStudentGrid();
-        convocationLayout.add(ConfirmPayment,addMember,studentGrid);
+        }
+//        Button addMember = new Button("Add Member", VaadinIcon.USERS.create());
+//        addMember.addClickListener(buttonClickEvent -> addMem.open());
+//        addMember.getStyle().set("float", "right");
+
+        Button applyForConvocation = new Button("Apply for convocation", VaadinIcon.DIPLOMA_SCROLL.create());
+        applyForConvocation.addClickListener(buttonClickEvent ->{
+            H3 label = new H3("You are applying for convocation 2k20 ");
+            Dialog dialog = new Dialog();
+
+            dialog.setCloseOnEsc(false);
+            dialog.setCloseOnOutsideClick(false);
+
+            Button confirmButton = new Button("Confirm", event -> {
+                convocation.setConfirmationStatus("Applied");
+                applicationStatus.setValue(convocation.getConfirmationStatus());
+                Notification.show("Confirmed!");
+                dialog.close();
+            });
+            confirmButton.addThemeNames(Lumo.DARK);
+            Button cancelButton = new Button("Cancel", event -> {
+                Notification.show("Cancelled!");
+                dialog.close();
+            });
+            cancelButton.addThemeNames(Material.LIGHT);
+
+            dialog.add(label,confirmButton, cancelButton);
+            dialog.open();
+        } );
+//        setStudentGrid();
+
+        up.add(as,applicationStatus);
+        down.add(ps,paymentStatus);
+        convocationLayout.add(up,applyForConvocation,down,ConfirmPayment);
 
         return convocationLayout;
     }
@@ -155,17 +216,23 @@ public class StudentView  extends AppLayout {
 
     private Dialog makePayment(){
         FormLayout registration = new FormLayout();
-        TextField Name = new TextField("Bkash Ac. Name", "01XXXXXXXXXX");
-        TextField trID = new TextField("Transaction ID", "BKash transaction ID");
-        registration.add(Name,trID);
+        Select<String> acocount = new Select<>();
+        acocount.setItems("Visa Card", "Nexus Pay", "Rocket", "Bkash");
+        acocount.setRequiredIndicatorVisible(true);
+        TextField accName = new TextField("Account Holder Name", "Account Holder Name");
+        TextField accNo = new TextField("Acc no ", "Card Number/ Acc. Number");
+        TextField trID = new TextField("Transaction ID", "Transaction ID");
+        registration.add(acocount,accName,accNo,trID);
         Dialog dialog = new Dialog();
+        trID.setRequired(true);
 
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
 
-        Label messageLabel = new Label();
 
         Button confirmButton = new Button("Confirm", event -> {
+            convocation.setPaymentStatus("Confirmed");
+            convocation.setId(trID.getValue());
             Notification.show("Confirmed!");
             dialog.close();
         });
@@ -180,50 +247,7 @@ public class StudentView  extends AppLayout {
         return dialog;
     }
 
-    private Dialog addMember(){
 
-        FormLayout registration = new FormLayout();
-        TextField Name = new TextField("Name", "name ");
-        TextField Gender = new TextField("Gender", "Male/Female");
-        TextField Relation = new TextField("Relation", "relation");
-        registration.add(Name,Gender,Relation);
-        Dialog dialog = new Dialog();
-
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-
-        Button confirmButton = new Button("Confirm", event -> {
-            Notification.show("Confirmed!");
-            dialog.close();
-        });
-        confirmButton.addThemeNames(Lumo.DARK);
-        Button cancelButton = new Button("Cancel", event -> {
-            Notification.show("Cancelled!");
-            dialog.close();
-        });
-        cancelButton.addThemeNames(Material.LIGHT);
-
-        dialog.add(registration,confirmButton, cancelButton);
-        return dialog;
-    }
-
-    private void setStudentGrid(){
-        studentGrid
-                .addColumn(StudentGuest::getName)
-                .setWidth("300px")
-                .setFlexGrow(0)
-                .setHeader("Guest Name");
-        studentGrid
-                .addColumn(StudentGuest::getGender)
-                .setAutoWidth(true)
-                .setFlexGrow(1)
-                .setHeader("Guest Gender");
-        studentGrid
-                .addColumn(StudentGuest::getRelation)
-                .setFlexGrow(1)
-                .setHeader("Relationship");
-
-    }
 
     private void setCourseGrid(){
         courseGrid.setRowsDraggable(true);

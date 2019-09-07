@@ -24,8 +24,12 @@ public class AuthService {
     public LoginToken authenticate(String username, String password) {
         Optional<User> user = authRepository.findById(username);
 
-        if (!user.isPresent() || !user.get().getPassword().equals(password))
+        if (!user.isPresent()  )
             return new LoginToken(null, null, null, "norole");
+        else if(user.isPresent()){
+            if(!user.get().getPassword().equals(password))
+                return new LoginToken(null, null, null, "norole");
+        }
 
         Optional<LoginToken> loginToken = loginTokenRepository.findById(username);
         return loginToken.orElseGet(() -> new LoginToken(null, null, null, "norole"));

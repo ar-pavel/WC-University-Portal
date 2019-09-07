@@ -188,9 +188,9 @@ public class HRView extends AppLayout {
                 String password = loginToken.getUsername() + "WCU";
                 String name = employee.getName();
 
-                System.err.println("HR View" + loginToken);
+//                System.err.println("HR View" + loginToken);
                 LoginToken authServiceCredential = authService.createCredential(loginToken,name, password);
-                System.err.println("HR View"  + authServiceCredential);
+//                System.err.println("HR View"  + authServiceCredential);
 
                 Notification.show("Credential has been created" + "Initial password is 'username+wcu' ");
 

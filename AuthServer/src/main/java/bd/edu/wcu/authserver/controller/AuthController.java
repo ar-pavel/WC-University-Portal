@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -41,7 +43,11 @@ public class AuthController {
 
     }
 
-
+    @GetMapping("")
+    public ResponseEntity<List<LoginToken>> getAllLoginTokens(){
+        List<LoginToken> loginTokenList = authService.findAll();
+        return ResponseEntity.ok(loginTokenList);
+    }
 //    @GetMapping(value = "/{username}")
 //    public ResponseEntity<LoginToken> getStudent(@PathVariable String username) {
 //        try {

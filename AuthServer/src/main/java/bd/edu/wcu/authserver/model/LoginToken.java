@@ -3,6 +3,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = {"username"})
 
 public class LoginToken {
+    @Id
     private String username;
     private String name;
     private String fullName;

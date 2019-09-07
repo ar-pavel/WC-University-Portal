@@ -20,7 +20,11 @@ public class LgoinView extends LoginOverlay {
 //        addLoginListener(loginEvent -> getUI().ifPresent(ui -> ui.navigate("home")));
 
         addLoginListener(event -> {
+
+            String user = event.getUsername();
+
             LoginToken loginToken = authService.authenticate(event.getUsername(), event.getPassword());
+            System.out.println(loginToken);
 
             setDescription(loginToken.toString());
 
@@ -59,6 +63,7 @@ public class LgoinView extends LoginOverlay {
                     break;
 
             }
+
         });
 
         setAction("");
