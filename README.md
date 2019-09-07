@@ -41,22 +41,24 @@
 
     
 #####  5.    Deputy Registrar(Human Resource) VIew
-    - View all the employees in all the departments
-    - Add employee into any department and create initial credentials.
+   - View all the employees in all the departments
+   - Add employee into any department and create initial credentials.
+   
     
           DemoUser Name: DRHR
           DemoUser Password: DRHRWCU
+          
 
 
-FrontEnd Link: 
-https://wcu-portal.herokuapp.com/
+FrontEnd Link:   ` https://wcu-portal.herokuapp.com `
 
 Microservices links:
 
-http://wcu-discovery-server.herokuapp.com/
-https://wcu-gateway-api.herokuapp.com/
-https://wcu-student-api.herokuapp.com/swagger-ui.html#
-https://wcu-program-api.herokuapp.com/swagger-ui.html#
-https://wcu-hr-api.herokuapp.com/swagger-ui.html#
-https://wcu-auth-server.herokuapp.com/api/v1/auth
-https://wcu-convocation-api.herokuapp.com/swagger-ui.html#
+      http://wcu-discovery-server.herokuapp.com/
+      https://wcu-gateway-api.herokuapp.com/
+      https://wcu-student-api.herokuapp.com/swagger-ui.html#
+      https://wcu-program-api.herokuapp.com/swagger-ui.html#
+      https://wcu-hr-api.herokuapp.com/swagger-ui.html#
+      https://wcu-auth-server.herokuapp.com/api/v1/auth
+      https://wcu-convocation-api.herokuapp.com/swagger-ui.html#
+      
