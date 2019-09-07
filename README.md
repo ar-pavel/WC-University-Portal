@@ -4,7 +4,7 @@
 
 ### Mudules:
   1.    Student View
-    1.1 View Registered courses by him/her
+   - 1.1 View Registered courses by him/her
     1.2 View current CGPA, number of credits completed
     1.3 Apply for convocation if eligible (depends on his/her program’s minimum credits for graduation criteria). Otherwise the option will be disabled
     1.4 Make payment for convocation (Selecting gateway and placing TrxID). This option will be disabled before applying. Also one can make payment only once.
