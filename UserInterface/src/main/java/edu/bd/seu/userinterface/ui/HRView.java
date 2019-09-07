@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -26,9 +27,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
 import edu.bd.seu.userinterface.model.Employee;
+import edu.bd.seu.userinterface.model.LoginToken;
+import edu.bd.seu.userinterface.service.AuthService;
 import edu.bd.seu.userinterface.service.EmployeeService;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +49,19 @@ public class HRView extends AppLayout {
     private Dialog dialog;
 
     private EmployeeService employeeService;
+    private AuthService authService;
     private List<Employee> employees;
     private Binder<Employee> employeeBinder;
 
-    public HRView(EmployeeService employeeService) {
+    public HRView(HttpSession httpSession, EmployeeService employeeService, AuthService authService) {
         this.employeeService = employeeService;
+        this.authService = authService;
         employees = employeeService.getEmployees();
         init();
 
-        Header header = new Header();
+        Header header = new Header(httpSession);
         Footer footer = new Footer();
+
 
         tabs = new Tabs(dashBoard(), user(), logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
@@ -67,6 +74,16 @@ public class HRView extends AppLayout {
         addToNavbar(new DrawerToggle());
         addToDrawer(header,tabs,footer);
         setContent(tab2Workspace.get(tabs.getSelectedTab()));
+
+//
+//        header.addAttachListener(event -> {
+//            LoginToken loginToken = header.getLoginToken();
+//            System.err.println("header click" + loginToken);
+//            if (!loginToken.getRole().equals("DeputyRegister(HumanResource)")) {
+//                httpSession.removeAttribute("user");
+//                header.getUI().ifPresent(ui -> ui.navigate("login"));
+//            }
+//        });
 
     }
 
@@ -89,7 +106,7 @@ public class HRView extends AppLayout {
 
     private VerticalLayout dashboardView() {
         VerticalLayout dashbaLayout = new VerticalLayout();
-        H1 h1 = new H1("I will add it latter! ");
+        H3 h1 = new H3("Human Resource of WC University");
         dashbaLayout.add(h1);
         Button addEmployee = new Button("Add Employee", VaadinIcon.PLUS_CIRCLE_O.create());
         addEmployee.getStyle().set("float", "right");
@@ -158,15 +175,28 @@ public class HRView extends AppLayout {
 
         Button confirmButton = new Button("Confirm", event -> {
             Notification.show("Confirmed!");
-//            List<Course> courses = new ArrayList<>();
-//            Employee employee = new Employee("0000000000000", "Demo", "demo@seu.edu.bd", LocalDate.of(1996, 10, 12), 43, LocalDate.now(), "BScInCSE", 0.0, 0, courses);
             Employee employee = new Employee();
             try {
                 employeeBinder.writeBean(employee);
                 Notification.show(employee.toString());
                 Employee savedEmployee = employeeService.insertEmployee(employee);
+                LoginToken loginToken = new LoginToken();
+                loginToken.setName(employee.getName());
+                loginToken.setRole(employee.getRole());
+                loginToken.setUsername(employee.getId());
+
+                String password = loginToken.getUsername() + "WCU";
+                String name = employee.getName();
+
+                System.err.println("HR View" + loginToken);
+                LoginToken authServiceCredential = authService.createCredential(loginToken,name, password);
+                System.err.println("HR View"  + authServiceCredential);
+
+                Notification.show("Credential has been created" + "Initial password is 'username+wcu' ");
+
                 employeeGrid.setItems(employeeService.getEmployees());
                 Notification.show("Saved " + savedEmployee.getName());
+                employeeBinder.readBean(null);
                 dialog.close();
             }catch (HttpClientErrorException.Conflict errorException) {
 //                    employeeService.updateEmployee()
@@ -188,7 +218,7 @@ public class HRView extends AppLayout {
         cancelButton.addThemeNames(Material.LIGHT);
 
 
-        TextField idField = new TextField("Employee ID", "5 characters long");
+        TextField idField = new TextField("Employee ID", "Employee Initial/username");
         TextField nameField = new TextField("Employee Name", "Full name");
         TextField emailField = new TextField("Employee Email", "email");
 
@@ -205,7 +235,6 @@ public class HRView extends AppLayout {
         employeeBinder
                 .forField(idField)
                 .asRequired()
-                .withValidator(id -> id.length() == 5, "ID must be 5 characters only")
                 .bind(Employee::getId, Employee::setId);
         employeeBinder
                 .forField(nameField)

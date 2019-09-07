@@ -27,6 +27,7 @@ import edu.bd.seu.userinterface.model.Student;
 import edu.bd.seu.userinterface.model.StudentGuest;
 import edu.bd.seu.userinterface.service.StudentService;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class StudentView  extends AppLayout {
     private Map<Tab, Component> tab2Workspace;
     private Tabs tabs;
 
-    public StudentView() {
+    public StudentView(HttpSession httpSession) {
 
         studentMaker();
 
@@ -56,7 +57,7 @@ public class StudentView  extends AppLayout {
         tab2Workspace = new HashMap<>();
         courseGrid = new Grid<>();
 
-        Header header = new Header();
+        Header header = new Header(httpSession);
 //        header.getElement().getAttribute()
         Footer footer = new Footer();
         addToNavbar(new DrawerToggle());

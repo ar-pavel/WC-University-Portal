@@ -1,5 +1,7 @@
 package edu.bd.seu.userinterface;
 
+import edu.bd.seu.userinterface.model.Employee;
+import edu.bd.seu.userinterface.service.EmployeeService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +13,7 @@ public class UserinterfaceApplication {
     public RestTemplate getRestTemplate(){
         return new RestTemplate();
     }
+
 
     public static void main(String[] args) {
         SpringApplication.run(UserinterfaceApplication.class, args);

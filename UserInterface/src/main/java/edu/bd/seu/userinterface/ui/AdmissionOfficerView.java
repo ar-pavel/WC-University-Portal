@@ -33,6 +33,7 @@ import edu.bd.seu.userinterface.service.ProgramService;
 import edu.bd.seu.userinterface.service.StudentService;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ import static com.vaadin.flow.component.icon.VaadinIcon.DASHBOARD;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Route("admission-officer")
-public class AdmissionOfficer extends AppLayout {
+public class AdmissionOfficerView extends AppLayout {
     private Map<Tab, Component> tab2Workspace;
     private Tabs tabs;
     private Grid<Student> studentGrid;
@@ -54,11 +55,11 @@ public class AdmissionOfficer extends AppLayout {
     private Binder<Student> studentBinder;
     private ProgramService programService;
 
-    public AdmissionOfficer(StudentService studentService,ProgramService programService) {
+    public AdmissionOfficerView(HttpSession httpSession, StudentService studentService, ProgramService programService) {
         this.programService = programService;
         this.studentService = studentService;
         init();
-        Header header = new Header();
+        Header header = new Header(httpSession);
         Footer footer = new Footer();
         addToNavbar(new DrawerToggle());
 

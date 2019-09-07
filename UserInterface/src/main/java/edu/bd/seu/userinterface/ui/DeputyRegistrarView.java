@@ -29,6 +29,7 @@ import edu.bd.seu.userinterface.model.Program;
 import edu.bd.seu.userinterface.service.ProgramService;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,9 +57,9 @@ public class DeputyRegistrarView extends AppLayout {
     private Binder<Course> courseBinder;
     private Program program;
 
-    public DeputyRegistrarView(ProgramService programService) {
+    public DeputyRegistrarView(HttpSession httpSession, ProgramService programService) {
         this.programService = programService;
-        Header header = new Header();
+        Header header = new Header(httpSession);
         Footer footer = new Footer();
         addToNavbar(new DrawerToggle());
         tab2Workspace = new HashMap<>();

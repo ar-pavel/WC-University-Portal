@@ -24,6 +24,7 @@ import edu.bd.seu.userinterface.model.Student;
 import edu.bd.seu.userinterface.service.ProgramService;
 import edu.bd.seu.userinterface.service.StudentService;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +48,12 @@ public class CoordinatorView extends AppLayout {
 
 
 
-    public CoordinatorView(StudentService studentService, ProgramService programService) {
+    public CoordinatorView(HttpSession httpSession, StudentService studentService, ProgramService programService) {
         this.studentService = studentService;
         this.programService = programService;
         init();
 
-        Header header = new Header();
+        Header header = new Header(httpSession);
         Footer footer = new Footer();
 
         tabs = new Tabs(dashBoard(), user(), logout());
