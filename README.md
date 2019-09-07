@@ -42,8 +42,8 @@
    - Create courses. Course needs to be offered in any one of the created program. A program combo box makes it sure.
    
     
-          DemoUser Name: OAFJ
-          DemoUser Password: OAFJWCU
+          DemoUser Name: DRA
+          DemoUser Password: DRAWCU
 
     
 #####  5.    Deputy Registrar(Human Resource) VIew
