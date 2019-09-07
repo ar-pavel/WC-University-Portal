@@ -27,6 +27,7 @@ public class StudentService {
     public Student getStudent(String id){
         return restTemplate.getForObject(studentUrl + "/" + id, Student.class);
     }
+
     public List<Student> getStudents( ){
         ResponseEntity<List<Student>> response = restTemplate.exchange(
                 studentUrl,
@@ -36,7 +37,11 @@ public class StudentService {
         List<Student> students = response.getBody();
         return students;
     }
-
+    public Student updateStudent( Student student){
+        HttpEntity<Student> reqUpdate = new HttpEntity<>(student);
+        restTemplate.exchange(studentUrl + "/" + student.getId(), HttpMethod.PUT, reqUpdate, Student.class);
+        return reqUpdate.getBody();
+    }
 
 
 }

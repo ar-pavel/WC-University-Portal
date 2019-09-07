@@ -1,10 +1,10 @@
-package bd.edu.seu.employeeapi.model;
+package edu.bd.seu.userinterface.model;
 
+import com.vaadin.flow.component.polymertemplate.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +15,5 @@ public class Employee {
     private String id;
     private String name;
     private String role;
+    private String email;
 }

@@ -22,16 +22,12 @@ public class ProgramService {
     }
 
     public Program insertProgram(Program program){
-        HttpEntity<Program> request = new HttpEntity<>(program);
-        ResponseEntity<Program> response = restTemplate
-                .exchange(programUrl, HttpMethod.POST, request, Program.class);
-//        Program response = restTemplate.postForObject(programUrl, program, Program.class);
-        return response.getBody();
+        return restTemplate.postForObject(programUrl, program, Program.class);
     }
     public Program getProgram(String id){
-        Program program = restTemplate.getForObject(programUrl + "/" + id, Program.class);
-        return program;
+        return restTemplate.getForObject(programUrl + "/" + id, Program.class);
     }
+
     public List<Program> getPrograms( ){
         ResponseEntity<List<Program>> response = restTemplate.exchange(
                 programUrl,
@@ -41,6 +37,12 @@ public class ProgramService {
         List<Program> programs = response.getBody();
         return programs;
     }
+    public Program updateProgram( Program program){
+        HttpEntity<Program> reqUpdate = new HttpEntity<>(program);
+        restTemplate.exchange(programUrl + "/" + program.getName(), HttpMethod.PUT, reqUpdate, Program.class);
+        return reqUpdate.getBody();
+    }
+
 
 
 

@@ -50,34 +50,23 @@ public class StudentServiceTest {
         students.forEach(System.out::println);
     }
 
-    @Test
-    public void testInsertStudent() {
-    }
 
     @Test
-    public void testGetStudent() {
-    }
+    public void updateStudent() {
+        List<Course> courses = new ArrayList<>();
+        courses.add(new Course("CSE1011","Programming Language I (C)",3.0));
+        courses.add(new Course("CSE1012","Programming Language I (C) lab",1.0));
+        courses.add(new Course("CSE1013","Computer Fundamentals",3.0));
+        courses.add(new Course("CSE1021","Discrete Mathematics",3.0));
+        courses.add(new Course("CSE1033","Data Structure",3.0));
+        courses.add(new Course("CSE1034","Data Structure Lab",1.0));
+        courses.add(new Course("CSE2013","Digital Logic Design",3.0));
+        courses.add(new Course("CSE2014","Digital Logic Design Lab",1.0));
 
-    @Test
-    public void testGetStudents() {
-    }
+        Student student =  new Student("2015200000021", "Morshed Alam", "2015200000021@seu.edu.bd", LocalDate.of(1996, 10, 12), 41, LocalDate.of(2016,04,10),"BScInCSE", 3.29, 122, courses);
+        Student updateStudent = studentService.updateStudent(student);
 
-//    @Test
-//    public void updateStudent() {
-//        List<Course> courses = new ArrayList<>();
-//        courses.add(new Course("CSE1011","Programming Language I (C)",3.0));
-//        courses.add(new Course("CSE1012","Programming Language I (C) lab",1.0));
-//        courses.add(new Course("CSE1013","Computer Fundamentals",3.0));
-//        courses.add(new Course("CSE1021","Discrete Mathematics",3.0));
-//        courses.add(new Course("CSE1033","Data Structure",3.0));
-//        courses.add(new Course("CSE1034","Data Structure Lab",1.0));
-//        courses.add(new Course("CSE2013","Digital Logic Design",3.0));
-//        courses.add(new Course("CSE2014","Digital Logic Design Lab",1.0));
-//
-//        Student student =  new Student("2015200000021", "Morshed Alam", "2015200000021.seu.edu.bd", LocalDate.of(1996, 10, 12), 41, LocalDate.of(2016,04,10),"BScInCSE", 3.29, 122, courses);
-//        Student updateStudent = studentService.updateStudent(student.getId(), student);
-//
-//        System.out.println(updateStudent);
-//
-//    }
+        System.out.println(updateStudent);
+
+    }
 }

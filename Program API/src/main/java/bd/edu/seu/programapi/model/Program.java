@@ -16,7 +16,7 @@ import java.util.List;
 public class Program {
     @Id
     private String name;
-    private long minCreditReq;
+    private double minCreditReq;
     private double minCgpaReq;
     private List<Course> courseList;
 }

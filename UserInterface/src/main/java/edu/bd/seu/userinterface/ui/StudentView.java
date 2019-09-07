@@ -72,6 +72,8 @@ public class StudentView  extends AppLayout {
             setContent(component);
         });
         addToDrawer(header,tabs,footer);
+        setContent(tab2Workspace.get(tabs.getSelectedTab()));
+
     }
 
     private Tab dashBoard() {

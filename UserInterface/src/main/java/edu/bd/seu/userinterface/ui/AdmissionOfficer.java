@@ -8,7 +8,8 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
@@ -27,10 +29,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.material.Material;
 import edu.bd.seu.userinterface.model.Student;
+import edu.bd.seu.userinterface.service.ProgramService;
 import edu.bd.seu.userinterface.service.StudentService;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,30 +52,40 @@ public class AdmissionOfficer extends AppLayout {
     private StudentService studentService;
     private List<Student> students;
     private Binder<Student> studentBinder;
+    private ProgramService programService;
 
-    public AdmissionOfficer(StudentService studentService) {
+    public AdmissionOfficer(StudentService studentService,ProgramService programService) {
+        this.programService = programService;
         this.studentService = studentService;
+        init();
+        Header header = new Header();
+        Footer footer = new Footer();
+        addToNavbar(new DrawerToggle());
+
+        tabs = new Tabs(dashBoard(), user(), logout());
+
+//        setContent(deshboardView());
+        tabs.setSelectedIndex(0);
+        setContent(tab2Workspace.get(tabs.getSelectedTab()));
+        tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        tabs.addSelectedChangeListener(event -> {
+            Tab selectedTab = event.getSelectedTab();
+            Component component = tab2Workspace.get(selectedTab);
+            setContent(component);
+        });
+        addToDrawer(header,tabs,footer);
+        setContent(tab2Workspace.get(tabs.getSelectedTab()));
+
+    }
+
+    private void init() {
         students = studentService.getStudents();
         studentBinder = new Binder<>();
         dialog = new Dialog();
         studentBinder = new Binder<>();
-
-
         studentGrid = new Grid<>();
-        Header header = new Header();
-        Footer footer = new Footer();
-        addToNavbar(new DrawerToggle());
         tab2Workspace = new HashMap<>();
 
-        tabs = new Tabs(dashBoard(), user(), logout());
-
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.addSelectedChangeListener(event -> {
-            final Tab selectedTab = event.getSelectedTab();
-            final Component component = tab2Workspace.get(selectedTab);
-            setContent(component);
-        });
-        addToDrawer(header,tabs,footer);
     }
 
     private Tab dashBoard() {
@@ -84,7 +98,7 @@ public class AdmissionOfficer extends AppLayout {
 
     private VerticalLayout deshboardView() {
         VerticalLayout dashbaLayout = new VerticalLayout();
-        H1 h1 = new H1("This is the Dashboard & IDK what to do with this! -_- ");
+        H3 h1 = new H3("Student list of the WC University");
         dashbaLayout.add(h1);
         Button addStudent = new Button("Add Student", VaadinIcon.PLUS_CIRCLE_O.create());
         addStudent.getStyle().set("float", "right");
@@ -149,12 +163,14 @@ public class AdmissionOfficer extends AppLayout {
                 .addColumn(Student::getDateOfAdmission)
                 .setFlexGrow(1)
                 .setHeader("Admission Date");
-//        studentGrid
-//                .addComponentColumn(this::getEditColumn)
-//                .setWidth("60px")
-//                .setFlexGrow(0);
+        studentGrid
+                .addComponentColumn(this::getEditColumn)
+                .setWidth("60px")
+                .setFlexGrow(0);
 
         studentGrid.setItems(students);
+        studentGrid.addThemeVariants(
+                GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_ROW_STRIPES);
 
     }
 
@@ -175,15 +191,17 @@ public class AdmissionOfficer extends AppLayout {
                 Notification.show("Saved " + savedStudent.getName());
                 dialog.close();
             }catch (HttpClientErrorException.Conflict errorException) {
-//                    studentService.updateStudent()
+                studentService.updateStudent(student);
+                Notification.show("Student Info Updated");
+                studentGrid.setItems(studentService.getStudents());
+                dialog.close();
             }catch (ValidationException e) {
-//                System.err.println("*Days " + DAYS.between(LocalDate.now(), student.getDob()));
                 Notification.show(e.getMessage());
                 e.printStackTrace();
             } catch (Exception e) {
                 Notification.show(e.getMessage());
             }
-
+            studentBinder.readBean(new Student());
         });
 
         confirmButton.addThemeNames(Lumo.DARK);
@@ -197,13 +215,18 @@ public class AdmissionOfficer extends AppLayout {
         TextField idField = new TextField("Student ID", "13 digit ID");
         TextField nameField = new TextField("Student Name", "Full name");
         TextField emailField = new TextField("Student Email", "email");
-        TextField programField = new TextField("Program Name", "BScInCSE,BScInEE,..");
         TextField batchField = new TextField("Batch", "Current Batch No.");
         DatePicker datePicker = new DatePicker("Date of Birth");
         DatePicker admissionDatePicker = new DatePicker("Date of Admission",LocalDate.now());
+//        TextField programField = new TextField("Program Name", "BScInCSE,BScInEE,..");
+        Select<String> programSelect = new Select<>();
+        programSelect.setLabel("Program");
+        List<String> programName = new ArrayList<>();
+        programService.getPrograms().forEach(program -> programName.add(program.getName()));
+        programSelect.setItems(programName);
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(idField, nameField, emailField,datePicker,programField,admissionDatePicker,batchField);
+        formLayout.add(idField, nameField, emailField,datePicker,programSelect,admissionDatePicker,batchField);
         dialog.add(formLayout,confirmButton,cancelButton);
 
         studentBinder
@@ -225,6 +248,11 @@ public class AdmissionOfficer extends AppLayout {
                 .withValidator(dob -> DAYS.between(dob, LocalDate.now()) > 16 * 365, "Students should be at least 16 years old!")
                 .bind(Student::getDob, Student::setDob);
         studentBinder
+                .forField(admissionDatePicker)
+                .asRequired()
+                .withValidator(dob -> DAYS.between(dob, LocalDate.now()) <= 120, "Nice tricks! Give valid info ")
+                .bind(Student::getDateOfAdmission, Student::setDateOfAdmission);
+        studentBinder
                 .forField(emailField)
                 .asRequired()
                 .withValidator(new EmailValidator("This doesn't look like a valid email address"))
@@ -236,7 +264,7 @@ public class AdmissionOfficer extends AppLayout {
                 .withConverter(new StringToLongConverter("Batch must be a number"))
                 .bind(Student::getBatch, Student::setBatch);
         studentBinder
-                .forField(programField)
+                .forField(programSelect)
                 .asRequired()
                 .bind(Student::getProgram, Student::setProgram);;
 

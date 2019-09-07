@@ -41,22 +41,18 @@ public class ProgramServiceTest {
         programService.deleteALL();
     }
 
-    public Program getProgram() {
+    public void insertProgram() throws ResourceAlreadyExistsException {
         List<Course> courseList = new ArrayList<>();
         courseList.add(new Course("CSE1011", "Computer Fundamental", 3.0));
         courseList.add(new Course("CSE1012", "Computer Fundamental Lab", 1.0));
 
         Program program = new Program("BSc In CSE",144,3.0, courseList);
-
-        return program;
-    }
-
-    @Test
-    public void insertProgram() throws ResourceAlreadyExistsException {
-        Program program = getProgram();
         Program insertProgram = programService.insertProgram(program);
-        assertEquals(program,insertProgram);
+        assertEquals(insertProgram, program);
+
     }
+
+
 
     @Test
     public void findAll() {
@@ -67,7 +63,7 @@ public class ProgramServiceTest {
 
     @Test
     public void findById() throws ResourceAlreadyExistsException, ResourceDoesNotExistException {
-        Program program = getProgram();
+        Program program = new Program();
         Program insertProgram = programService.insertProgram(program);
         Program byId = programService.findById(program.getName());
         assertEquals(program,byId);
@@ -75,18 +71,18 @@ public class ProgramServiceTest {
 
     @Test
     public void updateProgram() throws ResourceDoesNotExistException, ResourceAlreadyExistsException {
-        Program program = getProgram();
+        Program program = new Program();
 //        programService.insertProgram(program);
         Program updatedprogram = program;
 //        updatedprogram.setName("BSc In EEE");
-//        Program updateProgram = programService.updateProgram(program.getName(), updatedprogram);
+        Program updateProgram = programService.updateProgram(program.getName(), updatedprogram);
         assertEquals(program,updatedprogram);
 
     }
 
     @Test
     public void deleteById() {
-        Program program = getProgram();
+        Program program = new Program();
         boolean state = false;
         try {
             Program insertProgram = programService.insertProgram(program);

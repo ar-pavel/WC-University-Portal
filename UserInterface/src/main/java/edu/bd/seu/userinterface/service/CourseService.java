@@ -22,16 +22,12 @@ public class CourseService {
     }
 
     public Course insertCourse(Course course){
-        HttpEntity<Course> request = new HttpEntity<>(course);
-        ResponseEntity<Course> response = restTemplate
-                .exchange(courseUrl, HttpMethod.POST, request, Course.class);
-//        Course response = restTemplate.postForObject(courseUrl, course, Course.class);
-        return response.getBody();
+        return restTemplate.postForObject(courseUrl, course, Course.class);
     }
     public Course getCourse(String id){
-        Course course = restTemplate.getForObject(courseUrl + "/" + id, Course.class);
-        return course;
+        return restTemplate.getForObject(courseUrl + "/" + id, Course.class);
     }
+
     public List<Course> getCourses( ){
         ResponseEntity<List<Course>> response = restTemplate.exchange(
                 courseUrl,
@@ -41,8 +37,10 @@ public class CourseService {
         List<Course> courses = response.getBody();
         return courses;
     }
-
-
-
+    public Course updateCourse( Course course){
+        HttpEntity<Course> reqUpdate = new HttpEntity<>(course);
+        restTemplate.exchange(courseUrl + "/" + course.getCode(), HttpMethod.PUT, reqUpdate, Course.class);
+        return reqUpdate.getBody();
+    }
 
 }

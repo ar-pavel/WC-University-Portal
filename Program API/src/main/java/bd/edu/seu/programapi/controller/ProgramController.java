@@ -46,15 +46,17 @@ public class ProgramController {
         return ResponseEntity.ok().body(programService.findAll());
     }
 
-    @PutMapping(value = "")
-    public ResponseEntity<Program> updateProgram(@RequestBody String code, @RequestBody Program program) {
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Program> updateProgram(@PathVariable String id, @RequestBody Program program) {
         try {
-            Program updateProgram = programService.updateProgram(code, program);
+            Program updateProgram = programService.updateProgram(id, program);
             return ResponseEntity.ok().body(program);
         } catch (ResourceDoesNotExistException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping(value = "/{code}")
     public ResponseEntity<String> deleteProgram(@PathVariable String code) {
