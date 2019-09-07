@@ -7,18 +7,18 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.theme.material.Material;
 import edu.bd.seu.userinterface.model.Course;
 import edu.bd.seu.userinterface.model.Student;
 import edu.bd.seu.userinterface.service.ProgramService;
@@ -45,6 +45,7 @@ public class CoordinatorView extends AppLayout {
     private Dialog dialog;
     private List<Student> students;
     private List<Course> courses;
+    private Student student;
 
 
 
@@ -79,6 +80,26 @@ public class CoordinatorView extends AppLayout {
                 courseGrid.setItems(student.getCourseList());
             }
             offeredCourseGrid.setItems(programService.getProgram(student.getProgram()).getCourseList());
+        });
+        offeredCourseGrid.addItemClickListener(courseItemClickEvent -> {
+            Dialog dialog = new Dialog();
+            H3 warning = new H3("Do you want to add this course? ");
+            Button confirmButton = new Button("Confirm", event -> {
+
+//                Course eventItem = courseItemClickEvent.getItem();
+//                offeredCourseGrid.
+
+                Notification.show("Confirmed!");
+                dialog.close();
+            });
+            confirmButton.addThemeNames(Lumo.DARK);
+            Button cancelButton = new Button("Cancel", event -> {
+                Notification.show("Cancelled!");
+                dialog.close();
+            });
+            cancelButton.addThemeNames(Material.LIGHT);
+            dialog.add(warning,confirmButton,cancelButton);
+            dialog.open();
         });
 
     }
@@ -137,7 +158,7 @@ public class CoordinatorView extends AppLayout {
                 .setWidth("150px")
                 .setFlexGrow(0)
                 .setHeader("Credit Hours");
-        offeredCourseGrid.addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_ROW_STRIPES);
+        offeredCourseGrid.addThemeVariants( GridVariant.LUMO_ROW_STRIPES);
 
     }
 

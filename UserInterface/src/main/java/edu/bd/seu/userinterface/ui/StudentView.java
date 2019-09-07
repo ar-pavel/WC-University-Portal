@@ -71,9 +71,15 @@ public class StudentView  extends AppLayout {
         addToNavbar(new DrawerToggle());
 
 //        studentMaker();
-        student = studentService.getStudent(loginToken.getUsername());
-//         convocation = convocationService.getConvocation(student.getId());
+         student = studentService.getStudent(loginToken.getUsername());
+//        System.err.println(student1);
+            if(student.getCourseList()==null) {
+                List<Course> courses = new ArrayList<>();
+                student.setCourseList(courses);
+            }
+//        student = studentService.getStudent(loginToken.getUsername());
         convocation = new Convocation();
+//        convocation = convocationService.getConvocation(student.getId());
 //        Student serviceStudent = studentService.getStudent("2016100000003");
 //        System.err.println(serviceStudent);
 
@@ -166,6 +172,8 @@ public class StudentView  extends AppLayout {
             applicationStatus.setValue("Application Confirmed");
 
         }
+
+
 //        Button addMember = new Button("Add Member", VaadinIcon.USERS.create());
 //        addMember.addClickListener(buttonClickEvent -> addMem.open());
 //        addMember.getStyle().set("float", "right");
@@ -195,6 +203,12 @@ public class StudentView  extends AppLayout {
             dialog.open();
         } );
 //        setStudentGrid();
+
+        if(student.getCgpa()==null || student.getCgpa()<3.2 || student.getCompletedCredit()<144){
+            Notification.show("You are not eligible for Convocation 2K20").setPosition(Notification.Position.BOTTOM_STRETCH);
+            applyForConvocation.setEnabled(false);
+            ConfirmPayment.setEnabled(false);
+        }
 
         up.add(as,applicationStatus);
         down.add(ps,paymentStatus);
