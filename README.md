@@ -1,8 +1,14 @@
 # WC University Management System
 
 
-  WC University is an Imginary University and this project is to maintain this university as a course projcet of `Advance Java`. 
+  WC University is an Imginary University and this project is to maintain this university as a course projcet of  `Advance Java`. 
   
+  ####  Technology Used: 
+#####     UI:
+   - Vaadin
+   - HTML
+   - CSS
+   
    
   
 
@@ -63,7 +69,7 @@
 
    [wcu-portal.herokuapp.com](https://wcu-portal.herokuapp.com) 
 
-`` Please click in all of the micro services link before getting to the fornt end.  ``
+`` Please click in all of the micro services link before getting into the fornt end.  ``
 
 ##### Microservices links:
 
