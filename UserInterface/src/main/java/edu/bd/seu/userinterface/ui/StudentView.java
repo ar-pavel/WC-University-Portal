@@ -204,7 +204,7 @@ public class StudentView  extends AppLayout {
         } );
 //        setStudentGrid();
 
-        if(student.getCgpa()==null || student.getCgpa()<3.2 || student.getCompletedCredit()<144){
+        if(student.getCgpa()==null || student.getCgpa()<3.2 || student.getCompletedCredit()<20){
             Notification.show("You are not eligible for Convocation 2K20").setPosition(Notification.Position.BOTTOM_STRETCH);
             applyForConvocation.setEnabled(false);
             ConfirmPayment.setEnabled(false);

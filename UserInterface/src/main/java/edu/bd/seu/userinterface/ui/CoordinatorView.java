@@ -25,6 +25,7 @@ import edu.bd.seu.userinterface.service.ProgramService;
 import edu.bd.seu.userinterface.service.StudentService;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class CoordinatorView extends AppLayout {
     private List<Student> students;
     private List<Course> courses;
     private Student student;
-
+    private Student selectedStudent;
 
 
     public CoordinatorView(HttpSession httpSession, StudentService studentService, ProgramService programService) {
@@ -74,6 +75,7 @@ public class CoordinatorView extends AppLayout {
             courseGrid.setItems();
 //            List<Course> courseList = studentService.getStudent(studentItemClickEvent.getItem().getId()).getCourseList();
             student = studentItemClickEvent.getItem();
+            selectedStudent = student;
             if (student.getCourseList() == null) {
                 courseGrid.setItems();
             } else {
@@ -86,10 +88,30 @@ public class CoordinatorView extends AppLayout {
             H3 warning = new H3("Do you want to add this course? ");
             Button confirmButton = new Button("Confirm", event -> {
 
-//                Course eventItem = courseItemClickEvent.getItem();
-//                offeredCourseGrid.
+                Course eventItem = courseItemClickEvent.getItem();
+//                student.getCourseList().add(eventItem);
+                System.err.println(eventItem);
+//                offeredCourseGrid.setItems(eventItem);
+//                studentService.updateStudent(student);
+                System.err.println(selectedStudent);
+                if(selectedStudent.getCourseList() == null)
+                    selectedStudent.setCourseList(new ArrayList<>());
+                selectedStudent.getCourseList().add(eventItem);
+
+                if(selectedStudent.getCgpa()==null)
+                    selectedStudent.setCgpa(4.0);
+               // selectedStudent.setCgpa((selectedStudent.getCgpa()+4)/selectedStudent.getCourseList().size());
+
+               selectedStudent.setCompletedCredit(selectedStudent.getCompletedCredit()+eventItem.getCredit().longValue());
+
+                studentService.updateStudent(selectedStudent);
+
+
+
 
                 Notification.show("Confirmed!");
+                courseGrid.getDataProvider().refreshAll();
+
                 dialog.close();
             });
             confirmButton.addThemeNames(Lumo.DARK);
@@ -109,6 +131,7 @@ public class CoordinatorView extends AppLayout {
         tab2Workspace = new HashMap<>();
         courseGrid = new Grid<>();
         offeredCourseGrid = new Grid<>();
+        selectedStudent = new Student();
     }
 
     private Tab dashBoard() {
