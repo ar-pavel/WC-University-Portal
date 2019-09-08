@@ -8,9 +8,13 @@
    - Vaadin
    - HTML
    - CSS
-   
-   
-  
+#####     Backend:
+   - Java
+    - Spring boot
+#####     Data Resource:
+   - NoSQL
+    - MongoDB
+    
 
 ### Mudules:
 
