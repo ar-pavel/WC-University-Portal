@@ -3,7 +3,7 @@
 
   WC University is an Imginary University and this project is to maintain this university as a course projcet of  `Advance Java`. 
   
-  ####  Technology Used: 
+####  Technology Used: 
 #####     UI:
    - Vaadin
    - HTML
