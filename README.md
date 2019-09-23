@@ -71,7 +71,7 @@
 
 ##### FrontEnd Link:       
 
-   [wcu-portal.herokuapp.com](https://wcu-portal.herokuapp.com) 
+  - [wcu-portal.herokuapp.com](https://wcu-portal.herokuapp.com) 
 
 `` Please click in all of the micro services link before getting into the fornt end.  ``
 
