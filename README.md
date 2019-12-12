@@ -19,7 +19,7 @@
 ### Mudules:
 
 
-#####  1.    Student View
+#####  1.    Coordinator View 
    - View Registered courses by him/her
    - View current CGPA, number of credits completed
    - Apply for convocation if eligible (depends on his/her program’s minimum credits for graduation criteria). Otherwise the option will be disabled
@@ -28,7 +28,7 @@
             DemoUser Name: DRA
             DemoUser Password: DRAWCU
 
-#####  2.    Coordinator View
+#####  2.    Student View
    - View students registered in program he is coordinating
    - View their grades and credits completed
    - Select students and register them into different courses offered in that particular program.
