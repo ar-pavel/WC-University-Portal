@@ -1,7 +1,8 @@
 # WC University Management System
 
 
-  WC University is an Imginary University and this project is to maintain this university as a course projcet of  `Advance Java`. 
+  WC University is an Imginary University and this project is to manage this university. 
+  There are 7 microservices for backend and a vaadin based front-end(under development) to maitain this system. 
   
 ####  Technology Used: 
 #####     UI:
@@ -10,10 +11,10 @@
    - CSS
 #####     Backend:
    - Java
-    - Spring boot
+   - Spring boot
 #####     Data Resource:
    - NoSQL
-    - MongoDB
+   - MongoDB
     
 
 ### Mudules:
